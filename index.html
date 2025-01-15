@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Todo</title>
+</head>
+<body>
+    <div id="app">
+        <div class="todo_app_wrapper">
+            <div class="menu">
+                <div class="menu_title">
+                    <img class="menu_title_icon" src="img/to-do-list.png" alt="">
+                    Glebby Todo  
+                </div>
+                <div class="menu_item" @click="menuFavoriteClick">
+                    <img class="menu_icon" src="img/star.png" alt="">
+                    <span class="menu_name">Важно</span>
+                </div>
+                <div class="menu_item" @click="menuTodayClick">
+                    <img class="menu_icon" src="img/calendar.png" alt="">
+                    <span class="menu_name">Сегодня</span>
+                </div>
+                <div class="menu_item" @click="menuAllClick">
+                    <img class="menu_icon" src="img/tasks.png" alt="">
+                    <span class="menu_name">Задачи</span>
+                </div>
+            </div>
+            <div class="todo_main">
+                <div v-if="current_filter === 'all'" class="main_title">
+                    <img src="img/tasks.png" alt="" class="main_title_icon">
+                    Все задачи
+                </div>
+                <div v-else-if="current_filter === 'favorite'" class="main_title">
+                    <img src="img/star.png" alt="" class="main_title_icon">
+                    Важно
+                </div>
+                <div v-else class="main_title">
+                    <img src="img/calendar.png" alt="" class="main_title_icon">
+                    Сегодня
+                </div>
+                <div class="todo_main_content">
+                    <div class="todo_list" v-if="tasks">
+                        <div v-for="item in tasks">
+                            <div @dblclick="editClick(item.id)" class="todo_list_item" v-if="filterTaskList(item)">
+                                <div class="todo_list_item_left_wrapper">
+                                    <img v-if="item.done" @click="doneStateClick(item.id)" class="todo_list_item_check_icon" src="img/check-circle-done.png" alt="">
+                                    <img v-else @click="doneStateClick(item.id)" class="todo_list_item_check_icon" src="img/check-circle.png" alt="">
+                                    <span v-if="item.done" class="todo_list_item_name" ><del >{{ item.text }}</del></span>
+                                    <span v-else class="todo_list_item_name">{{ item.text }}</span>
+                                </div>
+                                <div class="todo_list_item_right_wrapper">
+                                    <span class="todo_list_item_date">{{ item.date }}</span>
+
+                                    <img @click="deleteItemClick(item.id)" src="img/delete.png" alt="" class="todo_list_item_delete">
+        
+                                    <img v-if="item.favorite" :task_id="item.id" @click="favoriteClick(item.id)" src="img/favorite_done.png" alt="" class="todo_list_item_favorite">
+                                    <img v-else @click="favoriteClick(item.id)" src="img/favorite.png" alt="" class="todo_list_item_favorite">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span v-else class="notask">Задания еще не добавлены</span>
+                    <form class="todo_creator" @submit.prevent="addNewTask">
+                        <img src="img/plus.png" alt="" class="todo_creator_icon">
+                        <input v-model="task_text" class="todo_creator_input_text" type="text" name="task_text" id="" placeholder="Добавить задачу">
+                        <input v-model="task_date" class="todo_creator_input_date" type="date" name="task_date" id="">
+                    </form>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+
+
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+          }
+        }
+    </script>
+
+    <script type="module">
+        import { createApp } from 'vue'
+        import App from './app.js'
+        
+        createApp(App).mount('#app')
+    </script>
+</body>
+</html>
